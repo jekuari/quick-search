@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	/* 	"crypto/tls" */
 	"fmt"
 	"io"
 	"net/http"
@@ -50,12 +49,14 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		imFeelingLuckyPage := fmt.Sprintf(constants.GOOGLE_IM_FEELING_LUCKY_URL, search)
 
-		/* tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		client := &http.Client{
+			CheckRedirect: func(req *http.Request, via []*http.Request) error {
+				// Prevent following redirects
+				return http.ErrUseLastResponse
+			},
 		}
-		client := &http.Client{Transport: tr} */
 
-		res, err := http.Get(imFeelingLuckyPage)
+		res, err := client.Get(imFeelingLuckyPage)
 		if err != nil {
 			logger.Error("Could not get response from I'm feeling lucky", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
