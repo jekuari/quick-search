@@ -38,6 +38,9 @@ func Search(ctx context.Context) http.HandlerFunc {
 		}
 
 		cachedUrl, err := redisClient.Get(ctx, originalSearch).Result()
+		if err != nil {
+			logger.Log("Error getting cached url: ", err)
+		}
 		if cachedUrl != "" {
 			logger.Log("Redirecting to cached url: ", cachedUrl)
 			http.Redirect(w, r, cachedUrl, http.StatusSeeOther)
@@ -53,7 +56,10 @@ func Search(ctx context.Context) http.HandlerFunc {
 		res, err := http.Get(imFeelingLuckyPage)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
+
+		logger.Log("Response status: ", res.Status)
 
 		content, err := io.ReadAll(res.Body)
 		if err != nil {
@@ -61,6 +67,8 @@ func Search(ctx context.Context) http.HandlerFunc {
 			return
 		}
 		defer res.Body.Close()
+
+		logger.Log("Content: ", string(content))
 
 		anchorRegex := regexp.MustCompile(`<a href="(.+?)">`)
 
@@ -71,9 +79,13 @@ func Search(ctx context.Context) http.HandlerFunc {
 			return
 		}
 
+		logger.Log("Match: ", match[1])
+
 		// convert search string to url encoded string
 
 		redisClient.Set(ctx, originalSearch, match[1], 30*24*time.Hour)
 		http.Redirect(w, r, match[1], http.StatusSeeOther)
+
+		logger.Log("Redirecting to: ", match[1])
 	}
 }
