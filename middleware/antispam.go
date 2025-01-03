@@ -48,16 +48,21 @@ func AntiSpam(ctx context.Context, next http.Handler) http.Handler {
 		if err != nil {
 			// create a new IpLimit object
 			ipData.Reset()
+			logger.Log("No data found: ", err)
 
 			// If the key does not exist, we should set it
 			ipData.Time = time.Now()
 			ipData.Count = 1
+
+			logger.Log("Setting new data")
 			newData, err := ipData.Marshal()
 			if err != nil {
 				logger.Log("Error marshalling data: ", err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
+
+			logger.Log("Setting new data in redis")
 
 			// Set the new data in redis
 			err = redisClient.Set(ctx, ip, newData, time.Hour).Err()
@@ -81,12 +86,16 @@ func AntiSpam(ctx context.Context, next http.Handler) http.Handler {
 			return
 		}
 
+		logger.Log("Data unmashalled: ", ipData)
+
 		// Reject if the count is over the limit
 		if ipData.Count >= constants.SEARCH_HOUR_RATE_LIMIT {
 			logger.Log("Too many requests from: ", ip)
 			http.Error(w, "Too many requests", http.StatusTooManyRequests)
 			return
 		}
+
+		logger.Log("Incrementing count")
 
 		// The request is within limits, so we can increment the count
 		ipData.Increment()
@@ -97,6 +106,8 @@ func AntiSpam(ctx context.Context, next http.Handler) http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		logger.Log("Setting new data")
 
 		// Set the new data in redis
 		err = redisClient.Set(ctx, ip, newData, time.Hour).Err()
