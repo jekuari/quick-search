@@ -10,7 +10,7 @@ RUN CG0_ENABLED=0 GOOS=linux go build -o main
 FROM ubuntu:latest
 
 COPY --from=builder /app/main .
-COPY html .
+COPY html ./html
 
 RUN chmod +x ./main
 
