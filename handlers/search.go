@@ -64,7 +64,19 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		// check for redirects
 		if res.StatusCode == http.StatusMovedPermanently || res.StatusCode == http.StatusFound {
+			logger.Log("Going to a direct redirect")
+			// extract the url from the header, which looks like: https://www.google.com/url?q=https://gemini.google.com/
 			location := res.Header.Get("Location")
+
+			// extract the url from the query string
+			u, err := url.Parse(location)
+			if err != nil {
+				logger.Error("Could not parse url", err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			location = u.Query().Get("q")
 			http.Redirect(w, r, location, http.StatusSeeOther)
 			redisClient.Set(ctx, originalSearch, location, 7*24*time.Hour)
 			return
