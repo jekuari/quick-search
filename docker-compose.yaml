@@ -6,7 +6,7 @@ services:
     ports:
       - 8493:8080
     environment:
-      ENV: "production"
+      GO_ENV: "production"
     networks:
       - service_net
     env_file: "/env/jekuari-quick-search/.env"
