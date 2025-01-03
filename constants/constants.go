@@ -32,11 +32,29 @@ var (
 
 func LoadEnvVariables() {
 	GOOGLE_SEARCH_URL = os.Getenv("GOOGLE_SEARCH_URL")
+	if GOOGLE_SEARCH_URL == "" {
+		panic("Error loading GOOGLE_SEARCH_URL")
+	}
 	GOOGLE_IM_FEELING_LUCKY_URL = os.Getenv("GOOGLE_IM_FEELING_LUCKY_URL")
+	if GOOGLE_IM_FEELING_LUCKY_URL == "" {
+		panic("Error loading GOOGLE_IM_FEELING_LUCKY_URL")
+	}
 	PORT = os.Getenv("PORT")
+	if PORT == "" {
+		panic("Error loading PORT")
+	}
 	HTML_FOLDER = os.Getenv("HTML_FOLDER")
+	if HTML_FOLDER == "" {
+		panic("Error loading HTML_FOLDER")
+	}
 	PUBLIC_FOLDER = os.Getenv("PUBLIC_FOLDER")
+	if PUBLIC_FOLDER == "" {
+		panic("Error loading PUBLIC_FOLDER")
+	}
 	REDIS_URL = os.Getenv("REDIS_URL")
+	if REDIS_URL == "" {
+		panic("Error loading REDIS_URL")
+	}
 
 	// load hour rate limit
 	hourRateLimit, err := strconv.Atoi(os.Getenv("SEARCH_HOUR_RATE_LIMIT"))
