@@ -55,6 +55,7 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		res, err := http.Get(imFeelingLuckyPage)
 		if err != nil {
+			logger.Log("Error getting response: ", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -63,6 +64,7 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		content, err := io.ReadAll(res.Body)
 		if err != nil {
+			logger.Log("Error reading response: ", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
