@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"net/http"
@@ -53,7 +54,12 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		imFeelingLuckyPage := fmt.Sprintf(constants.GOOGLE_IM_FEELING_LUCKY_URL, search)
 
-		res, err := http.Get(imFeelingLuckyPage)
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		client := &http.Client{Transport: tr}
+
+		res, err := client.Get(imFeelingLuckyPage)
 		if err != nil {
 			logger.Log("Error getting response: ", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
