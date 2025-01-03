@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"errors"
 
 	"github.com/jekuari/quick-search/constants"
 	"github.com/jekuari/quick-search/logger"
@@ -22,7 +23,7 @@ func RedisClient(db int) *redis.Client {
 func GetRedisSearchesClient(ctx context.Context) *redis.Client {
 	redisClient := ctx.Value(constants.REDIS_SEARCHES_CONTEXT_KEY)
 	if redisClient == nil {
-		logger.Log("redisClient is nil")
+		logger.Error("redisClient is nil", errors.New("redisClient is nil"))
 		return nil
 	}
 
@@ -32,7 +33,7 @@ func GetRedisSearchesClient(ctx context.Context) *redis.Client {
 func GetRedisRateLimitsClient(ctx context.Context) *redis.Client {
 	redisClient := ctx.Value(constants.REDIS_RATE_LIMITS_CONTEXT_KEY)
 	if redisClient == nil {
-		logger.Log("redisClient is nil")
+		logger.Error("redisClient is nil", errors.New("redisClient is nil"))
 		return nil
 	}
 

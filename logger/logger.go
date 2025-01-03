@@ -18,3 +18,7 @@ func Log(val ...any) {
 
 	fmt.Printf("%v | %v\n", date, concatenated)
 }
+
+func Error(title string, err error) {
+	Log("Error: ", title, " | description: ", err)
+}

@@ -46,7 +46,7 @@ func main() {
 	go func() {
 		err := http.ListenAndServe(constants.PORT, nil)
 		if err != nil {
-			logger.Log("Error starting server: ", err)
+			logger.Error("Could not start server", err)
 		}
 	}()
 	<-block

@@ -26,7 +26,6 @@ func Search(ctx context.Context) http.HandlerFunc {
 		originalSearch := search
 
 		if search == "" {
-			logger.Log(("Redirecting to index.html"))
 			Index(w, r)
 			return
 		}
@@ -40,17 +39,14 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		cachedUrl, err := redisClient.Get(ctx, originalSearch).Result()
 		if err != nil {
-			logger.Log("Error getting cached url: ", err)
+			logger.Log("Cached url was not available", err)
 		}
 		if cachedUrl != "" {
-			logger.Log("Redirecting to cached url: ", cachedUrl)
 			http.Redirect(w, r, cachedUrl, http.StatusSeeOther)
 			return
 		}
 
 		search = url.QueryEscape(originalSearch[1:])
-
-		logger.Log("search: ", search)
 
 		imFeelingLuckyPage := fmt.Sprintf(constants.GOOGLE_IM_FEELING_LUCKY_URL, search)
 
@@ -61,22 +57,18 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		res, err := http.Get(imFeelingLuckyPage)
 		if err != nil {
-			logger.Log("Error getting response: ", err)
+			logger.Error("Could not get response from I'm feeling lucky", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		logger.Log("Response status: ", res.Status)
-
 		content, err := io.ReadAll(res.Body)
 		if err != nil {
-			logger.Log("Error reading response: ", err)
+			logger.Error("Could not read response from I'm feeling lucky", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		defer res.Body.Close()
-
-		logger.Log("Content: ", string(content))
 
 		anchorRegex := regexp.MustCompile(`<a href="(.+?)">`)
 
@@ -87,13 +79,9 @@ func Search(ctx context.Context) http.HandlerFunc {
 			return
 		}
 
-		logger.Log("Match: ", match[1])
-
 		// convert search string to url encoded string
 
 		redisClient.Set(ctx, originalSearch, match[1], 30*24*time.Hour)
 		http.Redirect(w, r, match[1], http.StatusSeeOther)
-
-		logger.Log("Redirecting to: ", match[1])
 	}
 }

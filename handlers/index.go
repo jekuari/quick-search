@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/jekuari/quick-search/constants"
-	"github.com/jekuari/quick-search/logger"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -22,6 +21,5 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := fmt.Sprintf("%v%v%v", cwd, constants.HTML_FOLDER, "/index.html")
-	logger.Log("Serving file: ", filePath)
 	http.ServeFile(w, r, filePath)
 }
