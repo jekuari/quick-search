@@ -62,6 +62,14 @@ func Search(ctx context.Context) http.HandlerFunc {
 			return
 		}
 
+		// check for redirects
+		if res.StatusCode == http.StatusMovedPermanently || res.StatusCode == http.StatusFound {
+			location := res.Header.Get("Location")
+			http.Redirect(w, r, location, http.StatusSeeOther)
+			redisClient.Set(ctx, originalSearch, location, 7*24*time.Hour)
+			return
+		}
+
 		content, err := io.ReadAll(res.Body)
 		if err != nil {
 			logger.Error("Could not read response from I'm feeling lucky", err)
@@ -81,7 +89,7 @@ func Search(ctx context.Context) http.HandlerFunc {
 
 		// convert search string to url encoded string
 
-		redisClient.Set(ctx, originalSearch, match[1], 30*24*time.Hour)
+		redisClient.Set(ctx, originalSearch, match[1], 7*24*time.Hour)
 		http.Redirect(w, r, match[1], http.StatusSeeOther)
 	}
 }
