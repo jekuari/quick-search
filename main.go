@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/jekuari/quick-search/.git/logger"
 	"github.com/jekuari/quick-search/cache"
 	constants "github.com/jekuari/quick-search/constants"
 	handlers "github.com/jekuari/quick-search/handlers"
+	"github.com/jekuari/quick-search/logger"
 	dotenv "github.com/joho/godotenv"
 )
 

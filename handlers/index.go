@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/jekuari/quick-search/.git/logger"
 	"github.com/jekuari/quick-search/constants"
+	"github.com/jekuari/quick-search/logger"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {

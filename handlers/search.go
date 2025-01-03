@@ -9,9 +9,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/jekuari/quick-search/.git/logger"
 	"github.com/jekuari/quick-search/cache"
 	"github.com/jekuari/quick-search/constants"
+	"github.com/jekuari/quick-search/logger"
 )
 
 func Search(ctx context.Context) http.HandlerFunc {

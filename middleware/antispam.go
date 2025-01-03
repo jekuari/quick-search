@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jekuari/quick-search/.git/logger"
 	"github.com/jekuari/quick-search/cache"
 	"github.com/jekuari/quick-search/constants"
+	"github.com/jekuari/quick-search/logger"
 )
 
 type IpLimit struct {

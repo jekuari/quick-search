@@ -8,7 +8,7 @@ services:
     environment:
       ENV: "production"
 
-    env_file: "/env/jekuari-quick-search/.env"
+    env_file: "./.prod.env"
 
   redis:
     image: redis:latest

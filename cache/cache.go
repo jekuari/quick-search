@@ -3,8 +3,8 @@ package cache
 import (
 	"context"
 
-	"github.com/jekuari/quick-search/.git/logger"
 	"github.com/jekuari/quick-search/constants"
+	"github.com/jekuari/quick-search/logger"
 	"github.com/redis/go-redis/v9"
 )
 
