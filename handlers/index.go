@@ -15,7 +15,13 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	filePath := fmt.Sprintf("%v/%v%v", cwd, constants.HTML_FOLDER, "/index.html")
+
+	lastChar := cwd[len(cwd)-1:]
+	if lastChar != "/" {
+		cwd = fmt.Sprintf("%v/", cwd)
+	}
+
+	filePath := fmt.Sprintf("%v%v%v", cwd, constants.HTML_FOLDER, "/index.html")
 	logger.Log("Serving file: ", filePath)
 	http.ServeFile(w, r, filePath)
 }
