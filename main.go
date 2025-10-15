@@ -40,8 +40,6 @@ func main() {
 
 	logger.Log("Server started on port: ", constants.PORT)
 
-	// set no cache headers for all requests
-	// create a blocking channel to keep the server running
 	block := make(chan struct{}, 1)
 	go func() {
 		err := http.ListenAndServe(constants.PORT, nil)
