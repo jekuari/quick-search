@@ -1,6 +1,6 @@
 services:
   api:
-    container_name: api
+    container_name: jekuari_search
     build:
       context: .
       dockerfile: Dockerfile
