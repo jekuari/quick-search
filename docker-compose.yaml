@@ -1,12 +1,13 @@
 services:
   api:
+    container_name: jekuari_search
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - 8493:8080
     networks:
-      - service_net
+      - nginx-proxy_net
     env_file: "/env/jekuari-search/.env"
 
   redis:
@@ -16,11 +17,11 @@ services:
       - redis_data:/data
     command: ["redis-server", "--appendonly", "yes"]
     networks:
-      - service_net
+      - nginx-proxy_net
 
 networks:
-  service_net:
-    driver: bridge
+  nginx-proxy_net:
+    external: true
 
 volumes:
   redis_data:
