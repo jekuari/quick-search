@@ -7,7 +7,7 @@ services:
       - 8493:8080
     networks:
       - service_net
-    env_file: "/env/jekuari-quick-search/.env"
+    env_file: "/env/jekuari-search/.env"
 
   redis:
     image: redis:latest
